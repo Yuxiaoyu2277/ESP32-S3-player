@@ -1,5 +1,5 @@
 # 时光磁带（ESP32 S3 MP3播放器）
-[中文版](README.md)[English Version](README.en.md)
+# [中文版](README.md) / [English Version](README.en.md)
 ## 概述
 本项目是一个提供硬件及软件的指南，用于构建基于ESP32 S3微控制器的MP3播放器。该设备拥有磁带复古外形的外壳，具备音乐播放、时间显示。
 

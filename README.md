@@ -1,4 +1,4 @@
-# 时光磁带（ESP32 S3 MP3播放器）
+# 时光磁带（ESP32 S3 MP3播放器
 # [中文版](README.md) / [English Version](README.en.md)
 ## 目录
 - [概述](#概述)
@@ -29,8 +29,12 @@
 - 按钮：具有5个按钮对UI进行交互控制。
 - 开关：拥有1个开关控制电源开启关闭。
 
-## 原理图
-
+## 原理图 
+- <img src="Readme image/Schematic.png" alt="Description" width="10000">
+### 原理图解析
+- <font color=“#FF0000”>我是红色字体</font>
+<span style="color:red">some *blue* text</span>.
+ - <span style="color:red;">复位按钮：</span> EN引脚是ESP32 S3核心的复位引脚，采用按钮形式下拉接地该引脚可复位。
 ## 快速开始
 收集组件：收集上述所有必要的组件。
 组装电路：按照原理图在面包板或PCB上组装电路。

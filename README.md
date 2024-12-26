@@ -1,4 +1,4 @@
-# 时光磁带（ESP32 S3 MP3播放器
+# 时光磁带（ESP32 S3 MP3播放器）
 # [中文版](README.md) / [English Version](README.en.md)
 ## 目录
 - [概述](#概述)
@@ -32,9 +32,56 @@
 ## 原理图 
 - <img src="Readme image/Schematic.png" alt="Description" width="10000">
 ### 原理图解析
-- <font color=“#FF0000”>我是红色字体</font>
-<span style="color:red">some *blue* text</span>.
- - <span style="color:red;">复位按钮：</span> EN引脚是ESP32 S3核心的复位引脚，采用按钮形式下拉接地该引脚可复位。
+- 复位按钮：EN引脚是ESP32 S3核心的复位引脚，采用按钮形式下拉接地该引脚可复位。按钮增加电容和电阻是为了去除电平毛刺，避免出现错误复位。
+  > <img src="Readme image/ENbutton.png" alt="Description" width="200">
+- 操作按钮：IO_0为ESP32 S3的切换下载模式的功能按钮也可以是作为GUI操作反馈，其他按钮为GUI操作反馈。
+  > <img src="Readme image/ENbutton2.png" alt="Description" width="200">
+- ESP32 S3 引脚分配表:
+> 核心MCU接线说明：
+> 如图所示，这是引脚的分配，核心有两个滤波电容靠近核心，是为了过滤电源线的干扰，保证核心供电稳定。其中引脚分配如下：
+
+| **引脚编号** | **功能描述**      | **备注**                           |
+|--------------|-------------------|------------------------------------|
+| IO45         | NS_CON           | 对NS4150B的音频输出是否静音进行控制（高电平为允许声音输出）|
+| IO47         | IN               | 检测3.5MM耳机是否插入，如插入就是低电平                  |
+| IO40         | TF_BLK           | 通过PWM信号进行控制屏幕亮度                             |
+| IO46         | RT_A3V3_EN       | 音频的电压稳定芯片的开关（上拉给予3V3电压为开启）         |
+| IO9          | I2S_BCK          | 音频接口（I2S）位时钟线                                 |
+| IO10         | I2S_WS           | 音频接口（I2S）音频左右声数据切换|
+| IO11         | I2S_DOUT         | 音频接口（I2S）WM8978芯片数据至ESP32 S3|
+| IO12         | I2S_DIN          | 音频接口（I2S）数据至WN8978芯片 |
+| IO41         | I2S_MCLK         | 音频接口（I2S）额外频率时钟参考线线|
+| IO15         | SPI_CS           | SPI接口                           |
+| IO16         | SPI_RST          | SPI接口                           |
+| IO17         | SPI_DC           | SPI接口                           |
+| IO18         | SPI_SCLK         | SPI接口                           |
+| IO39         | SPI_SDA/MOSI     | SPI接口                           |
+| IO13         | TF_CLK           | TF卡/SD接口                          |
+| IO14         | TF_MOSI          | TF/SD卡接口                          |
+| IO7          | TF_CS            | TF/SD卡接口                          |
+| IO48         | TF_DATA2         | TF/SD卡接口                          |
+| IO2          | TF_DATA1         | TF/SD卡接口                          |
+| IO21         | SW_UP            | 按键                        |
+| IO20         | SW_DOWN          | 按键                        |
+| IO19         | SW_RIGHT         | 按键                        |
+| IO8          | SW_LEFT          | 按键                        |
+| IO0          | IO0              | 按键/切换下载模式                  |
+| IO4          | ADC_BAT          | 电池电量检测                      |
+| IO2          | I2C_SCL          | I2C接口                           |
+| IO3          | I2C_SDA          | I2C接口                           |
+| IO8          | RTC_INT          | 实时时钟中断接口                  |
+| IO19          | USB_D-          | USB数据/type C物理接口连接                 |
+| IO20          | USB_D+          | USB数据/type C物理接口连接                |
+- 其中仍然未用到的引脚有TXD0、RXD0原本是用于调试接口；但因为ESP32 S3支持USB日志调试，因此烧录固件可以不用单独的自动下载电路来进行烧录固件。其次关于IO37、IO36、IO35为芯片flash引脚所占用的，所以为了谨慎起见不进行使用。如果想要了解更多，请参考乐鑫官方的ESP32 S3数据手册，有你想知道的一切！
+> <img src="Readme image/ESP32S3.png" alt="引脚分配图" width="600">
+- WM8978 DAC: A3V3 是提供给模拟电路部分的电源。通过 C48（100nF）和 C3（10uF）电容进行滤波，3V3 为数字部分供电，通过 C49 和 C50（100nF 和 10uF）进行滤波，SPKVDD 为扬声器供电，通过 C19 和 C20（220uF）进行电源滤波。
+ I2C_SCL 和 I2C_SDA 引脚（引脚 16 和 17）通过 I2C 接口控制 WM8978 的配置，EAR_LOUT1 和 EAR_ROUT1 是左右声道的耳机输出引脚，他们经过钽电容输出到耳机接口（注意建议使用钽电容，假如因为成本可以换成陶瓷电容）。SPK+ 和 SPK- 是扬声器的输出引脚，支持单声道扬声器，分别通过 AGND 接地，构成差分驱动的扬声器信号。
+> <img src="Readme image/WM8978.png" alt="引脚分配图" width="600">
+- NS4150B和3.5MM：该部分电路为音频放大器以及3.5MM接口电路，在3.5MM接口上R3、C15为滤波和限流是为了上拉该引脚的电平，当有耳机插入时耳机的线路会把引脚接地，这样就可以检测是否有耳机插入。当插入时就可以切换音频输出的模式。注意：IN检测电路部分我使用了一个切换焊盘，这个切换焊盘用于测试用途，默认需要把1-3点连接，可采用0R电阻进行连接。在NS4150B芯片上NS_CON为音频输出是否静音进行控制（高电平为允许声音输出），芯片的3号4号引脚是DAC的模拟音频输入，8号和5号是放大后的音频输出
+> <img src="Readme image/speaker_headphone.png" alt="引脚分配图" width="600">
+- 
+
+
 ## 快速开始
 收集组件：收集上述所有必要的组件。
 组装电路：按照原理图在面包板或PCB上组装电路。

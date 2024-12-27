@@ -1,4 +1,5 @@
 # 时光磁带（ESP32 S3 MP3播放器）
+- - <img src="Readme image/3Dimage.png" alt="Description" width="10000">
 # [中文版](README.md) / [English Version](README.en.md)
 ## 目录
 - [概述](#概述)

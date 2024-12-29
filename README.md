@@ -1,7 +1,7 @@
 # 时光磁带（ESP32 S3 MP3播放器）
-- <img src="Readme image/3Dimage3.jpg" alt="Description" width="15000">
-- <img src="Readme image/3Dimage2.jpg" alt="Description" width="15000">
-- <img src="Readme image/3Dimage4.jpg" alt="Description" width="15000">
+- <img src="Readme image/3Dimage3.jpg" alt="Description" width="10000">
+- <img src="Readme image/3Dimage2.jpg" alt="Description" width="10000">
+- <img src="Readme image/3Dimage4.jpg" alt="Description" width="10000">
 
 # [中文版](README.md) / [English Version](README.en.md)
 ## 目录

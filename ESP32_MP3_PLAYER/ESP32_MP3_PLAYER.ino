@@ -239,8 +239,8 @@ void setup() {
   digitalWrite(RT_A3V3_EN, HIGH);
   dac.begin(I2C_SDA, I2C_SCL);
   audio.setPinout(I2S_BCLK, I2S_WS, I2S_DOUT, I2S_DIN, I2S_MCLKPIN);
-  dac.setSPKvol(0);
-  dac.setHPvol(55, 55);
+  dac.setSPKvol(55);
+  dac.setHPvol(0, 0);
 
   tft.init();
   tft.setRotation(3);  // 屏幕设置
